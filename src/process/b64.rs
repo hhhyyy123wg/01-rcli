@@ -2,9 +2,9 @@ use base64::{
     engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD},
     Engine,
 };
-use std::{fs::File, io::Read};
+use std::io::Read;
 
-use crate::cli::Base64Format;
+use crate::{cli::Base64Format, get_reader};
 use anyhow::Result;
 
 pub fn process_encode(input: &str, format: Base64Format) -> Result<()> {
@@ -36,15 +36,6 @@ pub fn process_decode(input: &str, format: Base64Format) -> Result<()> {
     let decoded = String::from_utf8(decoded)?;
     println!("{}", decoded);
     Ok(())
-}
-
-fn get_reader(input: &str) -> Result<Box<dyn Read>> {
-    let reader: Box<dyn Read> = if input == "-" {
-        Box::new(std::io::stdin())
-    } else {
-        Box::new(File::open(input)?)
-    };
-    Ok(reader)
 }
 
 #[cfg(test)]
